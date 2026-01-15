@@ -42,17 +42,18 @@ export const useAuthStore =create<IAuthStore>()(
                     set({session})
                 } catch (error) {
                     console.log(error);
+                    set({ session: null, user: null, jwt: null });
                 }
             },
             async login(email:string, password:string) {
                 try {
-                    const session = account.createEmailPasswordSession(email,password) 
+                    const session = await account.createEmailPasswordSession(email,password) 
                     const [user, {jwt}] = await Promise.all([
                         account.get<UserPrefs>(),
                         account.createJWT()
                     ])
                     if(!user.prefs?.reputation) await account.updatePrefs<UserPrefs>({reputation:0});
-                    set({user,jwt});
+                    set({user,jwt,session});
                     return {Success: true}
                 } catch (error) {
                     console.log(error);

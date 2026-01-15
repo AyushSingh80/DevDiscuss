@@ -1,7 +1,7 @@
 import { databases, users } from "@/models/server/config";
 import { UserPrefs } from "@/store/Auth";
 import React from "react";
-import { MagicCard } from "@/components/magicui/magic-card";
+import { MagicCard, MagicContainer } from "@/components/magicui/magic-card";
 import {NumberTicker} from "@/components/magicui/number-ticker";
 import { answerCollection, db, questionCollection } from "@/models/name";
 import { Query } from "node-appwrite";
@@ -34,7 +34,7 @@ const Page = async ({
           <h2 className="text-xl font-medium">Reputation</h2>
         </div>
         <p className="z-10 whitespace-nowrap text-4xl font-medium text-gray-800 dark:text-gray-200">
-          <NumberTicker value={user.prefs.reputation} />
+          <NumberTicker value={user.prefs.reputation.valueOf()} />
         </p>
         <div className="pointer-events-none absolute inset-0 h-full bg-[radial-gradient(circle_at_50%_120%,rgba(120,119,198,0.3),rgba(255,255,255,0))]" />
       </MagicCard>
