@@ -10,6 +10,19 @@ import { IconTrash } from "@tabler/icons-react";
 import { ID, Models } from "appwrite";
 import Link from "next/link";
 import React from "react";
+interface Comment extends Models.Document {
+  content: string;
+  type: "question" | "answer";
+  typeId: string;
+  authorId: string;
+  // 2. We add 'author' here because your component expects it to be injected
+  // (likely joined in the parent component or added manually in handleSubmit)
+  author: {
+    $id: string;
+    name: string;
+    [key: string]: any; // Allow other user properties
+  };
+}
 
 const Comments = ({
   comments: _comments,
@@ -17,12 +30,15 @@ const Comments = ({
   typeId,
   className,
 }: {
-  comments: Models.DocumentList<Models.Document>;
+  // 3. Update the prop type to use the new Interface
+  comments: Models.DocumentList<Comment>;
   type: "question" | "answer";
   typeId: string;
   className?: string;
 }) => {
-  const [comments, setComments] = React.useState(_comments);
+  // 4. Pass the generic type to useState so 'prev' knows the structure
+  const [comments, setComments] =
+    React.useState<Models.DocumentList<Comment>>(_comments);
   const [newComment, setNewComment] = React.useState("");
   const { user } = useAuthStore();
 
@@ -46,7 +62,11 @@ const Comments = ({
       setNewComment(() => "");
       setComments((prev) => ({
         total: prev.total + 1,
-        documents: [{ ...response, author: user }, ...prev.documents],
+        // 5. We manually attach the 'author' object here, matching our interface
+        documents: [
+          { ...response, author: user } as unknown as Comment,
+          ...prev.documents,
+        ],
       }));
     } catch (error: any) {
       window.alert(error?.message || "Error creating comment");
@@ -75,6 +95,7 @@ const Comments = ({
           <hr className="border-white/40" />
           <div className="flex gap-2">
             <p className="text-sm">
+              {/* No more errors here */}
               {comment.content} -{" "}
               <Link
                 href={`/users/${comment.authorId}/${slugify(

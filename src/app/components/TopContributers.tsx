@@ -23,7 +23,7 @@ const Notification = ({ user }: { user: Models.User<UserPrefs> }) => {
       <div className="flex flex-row items-center gap-3">
         <picture>
           <img
-            src={avatars.getInitials(user.name, 40, 40).href}
+            src={avatars.getInitials(user.name, 40, 40)}
             alt={user.name}
             className="rounded-2xl"
           />
@@ -40,6 +40,7 @@ const Notification = ({ user }: { user: Models.User<UserPrefs> }) => {
             <span>Reputation</span>
             <span className="mx-1">·</span>
             <span className="text-xs text-gray-500">
+              {/* {@ts-ignore} */}
               {user.prefs.reputation}
             </span>
           </p>

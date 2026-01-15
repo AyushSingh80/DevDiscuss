@@ -24,10 +24,7 @@ interface IAuthStore {
     email: string,
     password: string
   ): Promise<{ Success: boolean; error?: AppwriteException | null }>;
-  logout(
-    email: string,
-    password: string
-  ): Promise<void>;
+  logout(): Promise<void>;
 }
 export const useAuthStore =create<IAuthStore>()(
     persist(
@@ -77,7 +74,7 @@ export const useAuthStore =create<IAuthStore>()(
                     };
                 }
             },
-            async logout(email, password) {
+            async logout() {
                 try {
                     await account.deleteSessions()
                     set({session: null, jwt: null, user: null})
