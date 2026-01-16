@@ -42,7 +42,9 @@ const slugs = [
   "sonarqube",
   "figma",
 ];
-
+const images = slugs.map(
+  (slug) => `https://cdn.simpleicons.org/${slug}/${slug}`
+);
 const HeroSectionHeader = () => {
   const { session } = useAuthStore();
 
@@ -97,7 +99,7 @@ const HeroSectionHeader = () => {
         </div>
         <div className="flex items-center justify-center">
           <div className="relative max-w-[32rem] overflow-hidden">
-            <IconCloud iconSlugs={slugs} />
+            <IconCloud images={images} />
           </div>
         </div>
       </div>

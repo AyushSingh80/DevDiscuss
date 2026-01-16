@@ -6,7 +6,7 @@ import { AppwriteException, ID, Models } from "appwrite";
 import { account } from "@/models/client/config";
 
 export interface UserPrefs {
-  reputation: Number;
+  reputation: number;
 }
 interface IAuthStore {
   session: Models.Session | null;

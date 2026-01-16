@@ -8,6 +8,8 @@ import { IconCaretUpFilled, IconCaretDownFilled } from "@tabler/icons-react";
 import { ID, Models, Query } from "appwrite";
 import { useRouter } from "next/navigation";
 import React from "react";
+// 1. Import the custom Vote type
+import { Vote } from "@/models/types";
 
 const VoteButtons = ({
   type,
@@ -18,12 +20,13 @@ const VoteButtons = ({
 }: {
   type: "question" | "answer";
   id: string;
-  upvotes: Models.DocumentList<Models.Document>;
-  downvotes: Models.DocumentList<Models.Document>;
+  // 2. Update props to use DocumentList<Vote>
+  upvotes: Models.DocumentList<Vote>;
+  downvotes: Models.DocumentList<Vote>;
   className?: string;
 }) => {
-  const [votedDocument, setVotedDocument] =
-    React.useState<Models.Document | null>(); // undefined means not fetched yet
+  // 3. Update state to use Vote | null
+  const [votedDocument, setVotedDocument] = React.useState<Vote | null>();
   const [voteResult, setVoteResult] = React.useState<number>(
     upvotes.total - downvotes.total
   );
@@ -39,7 +42,10 @@ const VoteButtons = ({
           Query.equal("typeId", id),
           Query.equal("votedById", user.$id),
         ]);
-        setVotedDocument(() => response.documents[0] || null);
+        // 4. Cast the result to Vote
+        setVotedDocument(
+          () => (response.documents[0] as unknown as Vote) || null
+        );
       }
     })();
   }, [user, id, type]);
@@ -65,9 +71,11 @@ const VoteButtons = ({
       if (!response.ok) throw data;
 
       setVoteResult(() => data.data.voteResult);
-      setVotedDocument(() => data.data.document);
-    } catch (error: any) {
-      window.alert(error?.message || "Something went wrong");
+      // 5. Cast the API response to Vote
+      setVotedDocument(() => data.data.document as Vote);
+    } catch (error) {
+      const err = error as Error;
+      window.alert(err?.message || "Something went wrong");
     }
   };
 
@@ -92,9 +100,11 @@ const VoteButtons = ({
       if (!response.ok) throw data;
 
       setVoteResult(() => data.data.voteResult);
-      setVotedDocument(() => data.data.document);
-    } catch (error: any) {
-      window.alert(error?.message || "Something went wrong");
+      // 6. Cast the API response to Vote
+      setVotedDocument(() => data.data.document as Vote);
+    } catch (error:unknown) {
+      const err = error as Error;
+      window.alert(err?.message || "Something went wrong");
     }
   };
 

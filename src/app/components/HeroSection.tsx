@@ -26,7 +26,7 @@ export default async function HeroSection() {
         thumbnail: storage.getFilePreview(
           questionAttachmentBucket,
           q.attachmentId
-        ).href,
+        ),
       }))}
     />
   );

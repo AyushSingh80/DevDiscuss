@@ -5,10 +5,11 @@ import {Meteors} from "@/components/magicui/meteors";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuthStore } from "@/store/Auth";
+import { Question } from "@/models/types";
 import { cn } from "@/lib/utils";
 import slugify from "@/utils/slugify";
 import { IconX } from "@tabler/icons-react";
-import { Models, ID } from "appwrite";
+import { ID } from "appwrite";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { databases, storage } from "@/models/client/config";
@@ -39,7 +40,7 @@ const LabelInputContainer = ({
   );
 };
 
-const QuestionForm = ({ question }: { question?: Models.Document }) => {
+const QuestionForm = ({ question }: { question?: Question }) => {
   const { user } = useAuthStore();
   const [tag, setTag] = React.useState("");
   const router = useRouter();
@@ -122,7 +123,7 @@ const QuestionForm = ({ question }: { question?: Models.Document }) => {
     const attachmentId = await (async () => {
       if (!formData.attachment) return question?.attachmentId as string;
 
-      await storage.deleteFile(questionAttachmentBucket, question.attachmentId);
+      await storage.deleteFile(questionAttachmentBucket, question.attachmentId!);
 
       const file = await storage.createFile(
         questionAttachmentBucket,
@@ -165,8 +166,9 @@ const QuestionForm = ({ question }: { question?: Models.Document }) => {
       const response = question ? await update() : await create();
 
       router.push(`/questions/${response.$id}/${slugify(formData.title)}`);
-    } catch (error: any) {
-      setError(() => error.message);
+    } catch (error) {
+      const err = error as Error;
+      setError(() => err.message);
     }
 
     setLoading(() => false);

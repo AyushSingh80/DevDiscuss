@@ -3,12 +3,13 @@
 import React from "react";
 import { BorderBeam } from "./magicui/border-beam";
 import Link from "next/link";
-import { Models } from "appwrite";
+// import { Models } from "appwrite";
 import slugify from "@/utils/slugify";
 import { avatars } from "@/models/client/config";
+import { Question } from "@/models/types";
 import convertDateToRelativeTime from "@/utils/relativeTime";
 
-const QuestionCard = ({ ques }: { ques: Models.Document }) => {
+const QuestionCard = ({ ques }: { ques: Question }) => {
   const [height, setHeight] = React.useState(0);
   const ref = React.useRef<HTMLDivElement>(null);
 
@@ -25,8 +26,8 @@ const QuestionCard = ({ ques }: { ques: Models.Document }) => {
     >
       <BorderBeam size={height} duration={12} delay={9} />
       <div className="relative shrink-0 text-sm sm:text-right">
-        <p>{ques.totalVotes} votes</p>
-        <p>{ques.totalAnswers} answers</p>
+        <p>{ques.upvotesDocuments.total} votes</p>
+        <p>{ques.answers.total} answers</p>
       </div>
       <div className="relative w-full">
         <Link
@@ -48,7 +49,7 @@ const QuestionCard = ({ ques }: { ques: Models.Document }) => {
           <div className="ml-auto flex items-center gap-1">
             <picture>
               <img
-                src={avatars.getInitials(ques.author.name, 24, 24).href}
+                src={avatars.getInitials(ques.author.name, 24, 24)}
                 alt={ques.author.name}
                 className="rounded-lg"
               />

@@ -8,7 +8,7 @@ export default function Page() {
   return (
     <div className="max-w-3xl mx-auto py-8">
       <BackgroundBeams /> {/* Add a background effect */}
-      <Header title="Ask a Question" /> {/* Add a header */}
+      <Header />
       <div className="bg-black shadow-md rounded-lg p-6">
         <QuestionForm />
       </div>

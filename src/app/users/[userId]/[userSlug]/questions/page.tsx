@@ -7,6 +7,7 @@ import {
   voteCollection,
 } from "@/models/name";
 import { databases, users } from "@/models/server/config";
+import { Question } from "@/models/types";
 import { UserPrefs } from "@/store/Auth";
 import { Query } from "node-appwrite";
 import React from "react";
@@ -68,7 +69,7 @@ const Page = async ({
       </div>
       <div className="mb-4 max-w-3xl space-y-6">
         {questions.documents.map((ques) => (
-          <QuestionCard key={ques.$id} ques={ques} />
+          <QuestionCard key={ques.$id} ques={ques as unknown as Question} />
         ))}
       </div>
       <Pagination total={questions.total} limit={25} />

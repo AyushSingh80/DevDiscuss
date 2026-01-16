@@ -34,7 +34,7 @@ export const FloatingNav = ({
       return;
     }
     if (typeof current === "number") {
-      let direction = current! - scrollYProgress.getPrevious()!;
+      const direction = current! - scrollYProgress.getPrevious()!;
 
       if (scrollYProgress.get() < 0.05) {
         setVisible(false);
@@ -47,7 +47,11 @@ export const FloatingNav = ({
       }
     }
   });
-
+  type NavItem = {
+    name: string;
+    link: string;
+    icon?: JSX.Element; // or React.ReactNode
+  };
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -67,7 +71,7 @@ export const FloatingNav = ({
           className
         )}
       >
-        {navItems.map((navItem: any, idx: number) => (
+        {navItems.map((navItem: NavItem, idx: number) => (
           <Link
             key={`link=${idx}`}
             href={navItem.link}

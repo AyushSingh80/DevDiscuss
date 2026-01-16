@@ -4,12 +4,13 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useEffect, useId, useRef, useState } from "react";
 
-interface GridPatternProps {
+// 1. Extend ComponentProps<"svg"> to handle standard SVG props safely
+interface GridPatternProps extends React.ComponentProps<"svg"> {
   width?: number;
   height?: number;
   x?: number;
   y?: number;
-  strokeDasharray?: any;
+  strokeDasharray?: string | number; // 2. Fixed 'any'
   numSquares?: number;
   className?: string;
   maxOpacity?: number;
@@ -31,18 +32,23 @@ export function GridPattern({
   ...props
 }: GridPatternProps) {
   const id = useId();
-  const containerRef = useRef(null);
+  // 3. Type the Ref correctly for an SVG element
+  const containerRef = useRef<SVGSVGElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [squares, setSquares] = useState(() => generateSquares(numSquares));
 
-  function getPos() {
+  // Define the Square type for better safety
+  type Square = { id: number; pos: [number, number] };
+  const [squares, setSquares] = useState<Square[]>(() =>
+    generateSquares(numSquares)
+  );
+
+  function getPos(): [number, number] {
     return [
       Math.floor((Math.random() * dimensions.width) / width),
       Math.floor((Math.random() * dimensions.height) / height),
     ];
   }
 
-  // Adjust the generateSquares function to return objects with an id, x, and y
   function generateSquares(count: number) {
     return Array.from({ length: count }, (_, i) => ({
       id: i,
@@ -50,7 +56,6 @@ export function GridPattern({
     }));
   }
 
-  // Function to update a single square's position
   const updateSquarePosition = (id: number) => {
     setSquares((currentSquares) =>
       currentSquares.map((sq) =>
@@ -64,17 +69,16 @@ export function GridPattern({
     );
   };
 
-  // Update squares to animate in
   useEffect(() => {
     if (dimensions.width && dimensions.height) {
       setSquares(generateSquares(numSquares));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dimensions, numSquares]);
 
-  // Resize observer to update container dimensions
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         setDimensions({
           width: entry.contentRect.width,
           height: entry.contentRect.height,
@@ -82,16 +86,19 @@ export function GridPattern({
       }
     });
 
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
+    // 4. Copy ref to variable for cleanup safety
+    const container = containerRef.current;
+
+    if (container) {
+      resizeObserver.observe(container);
     }
 
     return () => {
-      if (containerRef.current) {
-        resizeObserver.unobserve(containerRef.current);
+      if (container) {
+        resizeObserver.unobserve(container);
       }
     };
-  }, [containerRef]);
+  }, []);
 
   return (
     <svg

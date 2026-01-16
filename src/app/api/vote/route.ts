@@ -130,13 +130,14 @@ export async function POST(request: NextRequest) {
         status: 200,
       }
     );
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as Error;
     return NextResponse.json(
       {
-        message: error?.message || "Error in voting",
+        message: err?.message || "Error in voting",
       },
       {
-        status: error?.status || error?.code || 500,
+        status: 500,
       }
     );
   }
