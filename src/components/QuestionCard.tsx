@@ -26,8 +26,8 @@ const QuestionCard = ({ ques }: { ques: Question }) => {
     >
       <BorderBeam size={height} duration={12} delay={9} />
       <div className="relative shrink-0 text-sm sm:text-right">
-        <p>{ques.upvotesDocuments.total} votes</p>
-        <p>{ques.answers.total} answers</p>
+        <p>{ques.upvotesDocuments?.total || 0} votes</p>
+        <p>{ques.answers?.total || 0} answers</p>
       </div>
       <div className="relative w-full">
         <Link
