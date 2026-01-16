@@ -2,8 +2,7 @@ import Answers from "@/components/Answers";
 import Comments from "@/components/Comments";
 import { MarkdownPreview } from "@/components/RTE";
 import VoteButtons from "@/components/VoteButtons";
-import Particles from "@/components/magicui/particles";
-import ShimmerButton from "@/components/magicui/shimmer-button";
+
 import { avatars } from "@/models/client/config";
 import {
   answerCollection,
@@ -22,9 +21,12 @@ import { IconEdit } from "@tabler/icons-react";
 import Link from "next/link";
 import { Query } from "node-appwrite";
 import React from "react";
-import DeleteQuestion from "./DeleteQuestion";
-import EditQuestion from "./EditQuestion";
+
 import { TracingBeam } from "@/components/ui/tracing-beam";
+import { Particles } from "@/components/magicui/particles";
+import { ShimmerButton } from "@/components/magicui/shimmer-button";
+import EditQuestion from "../EditQuestion";
+import DeleteQuestion from "../DeleteQuestion";
 
 const Page = async ({
   params,
@@ -184,7 +186,7 @@ const Page = async ({
                   storage.getFilePreview(
                     questionAttachmentBucket,
                     question.attachmentId
-                  ).href
+                  )
                 }
                 alt={question.title}
                 className="mt-3 rounded-lg"
@@ -204,7 +206,7 @@ const Page = async ({
             <div className="mt-4 flex items-center justify-end gap-1">
               <picture>
                 <img
-                  src={avatars.getInitials(author.name, 36, 36).href}
+                  src={avatars.getInitials(author.name, 36, 36)}
                   alt={author.name}
                   className="rounded-lg"
                 />
@@ -217,7 +219,7 @@ const Page = async ({
                   {author.name}
                 </Link>
                 <p>
-                  <strong>{author.prefs.reputation}</strong>
+                  <strong>{author.prefs.reputation.valueOf()}</strong>
                 </p>
               </div>
             </div>
