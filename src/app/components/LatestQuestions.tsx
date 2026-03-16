@@ -29,14 +29,15 @@ const LatestQuestions = async () => {
         databases.listDocuments(db, voteCollection, [
           Query.equal("type", "question"),
           Query.equal("typeId", ques.$id),
-          Query.limit(1), // for optimization
+          Query.equal("voteStatus", "upvoted"),
+          Query.limit(1),
         ]),
       ]);
 
       return {
         ...ques,
-        totalAnswers: answers.total,
-        totalVotes: votes.total,
+        upvotesDocuments: { total: votes.total, documents: [] },
+        answers: { total: answers.total, documents: [] },
         author: {
           $id: author.$id,
           reputation: author.prefs.reputation,
