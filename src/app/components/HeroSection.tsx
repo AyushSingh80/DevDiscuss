@@ -17,17 +17,20 @@ export default async function HeroSection() {
     Query.limit(15),
   ]);
 
+  const products = questions.documents
+    .filter((q) => q.attachmentId)
+    .map((q) => ({
+      title: q.title,
+      link: `/questions/${q.$id}/${slugify(q.title)}`,
+      thumbnail: storage
+        .getFilePreview(questionAttachmentBucket, q.attachmentId)
+        .toString(),
+    }));
+
   return (
     <HeroParallax
       header={<HeroSectionHeader />}
-      products={questions.documents.map((q) => ({
-        title: q.title,
-        link: `/questions/${q.$id}/${slugify(q.title)}`,
-        thumbnail: storage.getFilePreview(
-          questionAttachmentBucket,
-          q.attachmentId
-        ),
-      }))}
+      products={products}
     />
   );
 }

@@ -186,18 +186,17 @@ const Page = async ({
               className="rounded-xl p-4"
               source={question.content}
             />
-            <picture>
-              <img
-                src={
-                  storage.getFilePreview(
-                    questionAttachmentBucket,
-                    question.attachmentId
-                  )
-                }
-                alt={question.title}
-                className="mt-3 rounded-lg"
-              />
-            </picture>
+            {question.attachmentId && (
+              <picture>
+                <img
+                  src={storage
+                    .getFilePreview(questionAttachmentBucket, question.attachmentId)
+                    .toString()}
+                  alt={question.title}
+                  className="mt-3 rounded-lg"
+                />
+              </picture>
+            )}
             <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
               {question.tags.map((tag: string) => (
                 <Link
