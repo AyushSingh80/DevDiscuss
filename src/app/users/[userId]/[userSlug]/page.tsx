@@ -55,16 +55,25 @@ const Page = async ({
       ]),
     ]);
 
-  // Enrich recent answers with their question titles
+  // Enrich recent answers with their question titles.
+  // Appwrite's DefaultDocument type uses an index signature and does not enumerate
+  // custom attributes, so we cast to extract questionId explicitly.
   const enrichedAnswers = await Promise.all(
     recentAnswers.documents.map(async (ans) => {
+      const questionId = (ans as unknown as { questionId: string }).questionId;
       const question = await databases.getDocument(
         db,
         questionCollection,
-        ans.questionId,
+        questionId,
         [Query.select(["title"])]
       );
-      return { ...ans, question };
+      return {
+        $id: ans.$id,
+        $createdAt: ans.$createdAt,
+        content: String(ans.content),
+        questionId,
+        question: question as unknown as { $id: string; title: string },
+      };
     })
   );
 

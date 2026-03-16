@@ -14,7 +14,7 @@ import {
   questionAttachmentBucket,
 } from "@/models/name";
 import { databases, users } from "@/models/server/config";
-import { storage } from "@/models/client/config";
+import env from "@/app/env";
 import { UserPrefs } from "@/store/Auth";
 import convertDateToRelativeTime from "@/utils/relativeTime";
 import slugify from "@/utils/slugify";
@@ -189,9 +189,7 @@ const Page = async ({
             {question.attachmentId && (
               <picture>
                 <img
-                  src={storage
-                    .getFilePreview(questionAttachmentBucket, question.attachmentId)
-                    .toString()}
+                  src={`${env.appwrite.endpoint}/storage/buckets/${questionAttachmentBucket}/files/${question.attachmentId}/view?project=${env.appwrite.projectId}`}
                   alt={question.title}
                   className="mt-3 rounded-lg"
                 />
