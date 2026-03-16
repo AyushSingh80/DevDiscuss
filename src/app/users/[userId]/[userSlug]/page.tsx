@@ -80,7 +80,7 @@ const Page = async ({
   const stats = [
     {
       label: "Reputation",
-      value: user.prefs.reputation,
+      value: user.prefs?.reputation ?? 0,
       icon: <IconStarFilled className="h-5 w-5 text-orange-400" />,
       gradient: "from-orange-500/20 via-transparent to-transparent",
     },

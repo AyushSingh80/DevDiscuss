@@ -72,7 +72,7 @@ const Layout = async ({
                 </span>
                 <span className="flex items-center gap-1.5">
                   <IconStarFilled className="h-3.5 w-3.5 shrink-0 text-orange-500" />
-                  {user.prefs.reputation} reputation
+                  {user.prefs?.reputation ?? 0} reputation
                 </span>
               </div>
             </div>

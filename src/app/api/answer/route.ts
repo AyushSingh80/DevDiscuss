@@ -18,7 +18,8 @@ export async function POST(request: NextRequest) {
       }
     );
     const prefs = await users.getPrefs<UserPrefs>(authorId);
-    await users.updatePrefs(authorId, {
+    await users.updatePrefs<UserPrefs>(authorId, {
+      ...prefs,
       reputation: Number(prefs.reputation) + 1,
     });
     return NextResponse.json(response, {
@@ -47,7 +48,8 @@ export async function DELETE(request: NextRequest) {
       answerId
     );
     const prefs = await users.getPrefs<UserPrefs>(answer.authorId);
-    await users.updatePrefs(answer.authorId, {
+    await users.updatePrefs<UserPrefs>(answer.authorId, {
+      ...prefs,
       reputation: Number(prefs.reputation) - 1,
     });
     return NextResponse.json(

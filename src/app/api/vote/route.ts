@@ -40,6 +40,7 @@ export async function POST(request: NextRequest) {
 
       // Reverse the old vote's reputation effect
       await users.updatePrefs<UserPrefs>(QuestionOrAnswer.authorId, {
+        ...authorPrefs,
         reputation:
           response.documents[0].voteStatus === "upvoted"
             ? Number(authorPrefs.reputation) - 1
@@ -75,6 +76,7 @@ export async function POST(request: NextRequest) {
 
       // Apply the new vote's reputation effect
       await users.updatePrefs<UserPrefs>(QuestionOrAnswer.authorId, {
+        ...authorPrefs,
         reputation:
           voteStatus === "upvoted"
             ? Number(authorPrefs.reputation) + 1

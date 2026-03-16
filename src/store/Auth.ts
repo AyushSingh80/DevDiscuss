@@ -54,7 +54,7 @@ export const useAuthStore =create<IAuthStore>()(
                         account.createJWT()
                     ])
                     // Spread existing prefs so we never overwrite profilePictureId or other fields
-                    if(!user.prefs?.reputation) await account.updatePrefs<UserPrefs>({ reputation: 0, ...user.prefs });
+                    if(!user.prefs?.reputation) await account.updatePrefs<UserPrefs>({ ...user.prefs, reputation: 0 });
                     set({user,jwt,session});
                     return {Success: true}
                 } catch (error) {

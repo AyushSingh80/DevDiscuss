@@ -142,7 +142,7 @@ const Page = () => {
     try {
       await storage.deleteFile(profilePicturesBucket, currentPrefs.profilePictureId);
 
-      const restPrefs = { reputation: currentPrefs.reputation ?? 0 };
+      const restPrefs = { reputation: currentPrefs?.reputation ?? 0 };
       await account.updatePrefs(restPrefs);
 
       const currentUser = useAuthStore.getState().user;
