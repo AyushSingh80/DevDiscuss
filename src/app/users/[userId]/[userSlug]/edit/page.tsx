@@ -110,7 +110,7 @@ const Page = () => {
       );
 
       // Persist the file ID in user prefs (spread to preserve reputation etc.)
-      const updatedPrefs = { ...currentPrefs, profilePictureId: uploaded.$id };
+      const updatedPrefs = { reputation: currentPrefs?.reputation ?? 0, profilePictureId: uploaded.$id };
       await account.updatePrefs(updatedPrefs);
 
       // Patch store
@@ -142,7 +142,7 @@ const Page = () => {
     try {
       await storage.deleteFile(profilePicturesBucket, currentPrefs.profilePictureId);
 
-      const { profilePictureId: _removed, ...restPrefs } = currentPrefs;
+      const restPrefs = { reputation: currentPrefs.reputation ?? 0 };
       await account.updatePrefs(restPrefs);
 
       const currentUser = useAuthStore.getState().user;
