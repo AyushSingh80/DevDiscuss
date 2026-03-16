@@ -1,5 +1,7 @@
+import env from "@/app/env";
 import { Particles } from "@/components/magicui/particles";
 import { avatars } from "@/models/client/config";
+import { profilePicturesBucket } from "@/models/name";
 import { users } from "@/models/server/config";
 import { UserPrefs } from "@/store/Auth";
 import convertDateToRelativeTime from "@/utils/relativeTime";
@@ -21,7 +23,9 @@ const Layout = async ({
 }) => {
   const { userId } = await params;
   const user = await users.get<UserPrefs>(userId);
-  const avatarUrl = avatars.getInitials(user.name, 200, 200).toString();
+  const avatarUrl = user.prefs?.profilePictureId
+    ? `${env.appwrite.endpoint}/storage/buckets/${profilePicturesBucket}/files/${user.prefs.profilePictureId}/view?project=${env.appwrite.projectId}`
+    : avatars.getInitials(user.name, 200, 200).toString();
 
   return (
     <div className="relative min-h-screen bg-black text-white">

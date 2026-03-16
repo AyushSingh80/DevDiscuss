@@ -7,6 +7,7 @@ import { account } from "@/models/client/config";
 
 export interface UserPrefs {
   reputation: number;
+  profilePictureId?: string;
 }
 interface IAuthStore {
   session: Models.Session | null;
@@ -52,7 +53,8 @@ export const useAuthStore =create<IAuthStore>()(
                         account.get<UserPrefs>(),
                         account.createJWT()
                     ])
-                    if(!user.prefs?.reputation) await account.updatePrefs<UserPrefs>({reputation:0});
+                    // Spread existing prefs so we never overwrite profilePictureId or other fields
+                    if(!user.prefs?.reputation) await account.updatePrefs<UserPrefs>({...user.prefs, reputation:0});
                     set({user,jwt,session});
                     return {Success: true}
                 } catch (error) {

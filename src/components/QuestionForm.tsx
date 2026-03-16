@@ -91,13 +91,9 @@ const QuestionForm = ({ question }: { question?: Question }) => {
   };
 
   const create = async () => {
-    if (!formData.attachment) throw new Error("Please upload an image");
-
-    const storageResponse = await storage.createFile(
-      questionAttachmentBucket,
-      ID.unique(),
-      formData.attachment
-    );
+    const attachmentId = formData.attachment
+      ? (await storage.createFile(questionAttachmentBucket, ID.unique(), formData.attachment)).$id
+      : undefined;
 
     const response = await databases.createDocument(
       db,
@@ -108,7 +104,7 @@ const QuestionForm = ({ question }: { question?: Question }) => {
         content: formData.content,
         authorId: formData.authorId,
         tags: Array.from(formData.tags),
-        attachmentId: storageResponse.$id,
+        ...(attachmentId && { attachmentId }),
       }
     );
 
@@ -185,7 +181,7 @@ const QuestionForm = ({ question }: { question?: Question }) => {
       )}
       <LabelInputContainer>
         <Label htmlFor="title">
-          Title Address
+          Title
           <br />
           <small>
             Be specific and imagine you&apos;re asking a question to another
@@ -221,11 +217,11 @@ const QuestionForm = ({ question }: { question?: Question }) => {
       </LabelInputContainer>
       <LabelInputContainer>
         <Label htmlFor="image">
-          Image
+          Image{" "}
+          <span className="font-normal text-gray-400">(optional)</span>
           <br />
           <small>
-            Add image to your question to make it more clear and easier to
-            understand.
+            Add an image to make your question clearer and easier to understand.
           </small>
         </Label>
         <Input
